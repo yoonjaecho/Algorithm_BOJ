@@ -9,12 +9,8 @@ using namespace std;
 struct Event {
     int x,h;
     bool open;
-    Event() {}
-    Event(int xx, int hh, int oo) {
-        x = xx;
-        h = hh;
-        open = oo;
-    }
+    Event(int x, int h, int o)
+    :x(x),h(h),open(o) {}
 };
 
 int main()
@@ -36,6 +32,7 @@ int main()
     multiset<int> ms;
     ms.insert(0);
     int it = 0;
+
     while(it != ev.size()) {
         vector<Event> curEvent;
         int cur_x = ev[it].x;
