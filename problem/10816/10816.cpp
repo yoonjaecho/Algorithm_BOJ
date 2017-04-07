@@ -5,19 +5,13 @@ int main() {
     int n,m,in; scanf("%d",&n);
     while(n--) {
         scanf("%d",&in);
-        if(in < 0) {
-            in = -in;
-            in += SIZE;
-        }
+        in += SIZE;
         a[in]++;
     }
     scanf("%d",&m);
     while(m--) {
         scanf("%d",&in);
-        if(in < 0) {
-            in = -in;
-            in += SIZE;
-        }
+        in += SIZE;
         printf("%d ",a[in]);
     }
 }
