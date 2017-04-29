@@ -2,7 +2,7 @@
 #include <cstring>
 #include <algorithm>
 using namespace std;
-int a[511], ps[511], dp[511][511];
+int ps[511], dp[511][511];
 int go(int s, int e) {
     if(s==e) return 0;
     int &ret = dp[s][e];
@@ -14,14 +14,14 @@ int go(int s, int e) {
     return ret;
 }
 int main() {
-    int tc,n; scanf("%d",&tc);
+    int tc,n,in; scanf("%d",&tc);
     while(tc--) {
         scanf("%d",&n);
         memset(ps, 0, sizeof(ps));
         memset(dp, -1, sizeof(dp));
         for(int i=1; i<=n; i++) {
-            scanf("%d",a+i);
-            ps[i] = ps[i-1] + a[i];
+            scanf("%d",&in);
+            ps[i] = ps[i-1] + in;
         }
         printf("%d\n",go(1,n));
     }
