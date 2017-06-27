@@ -1,55 +1,24 @@
 #include <cstdio>
 #include <algorithm>
-#include <vector>
-#include <queue>
-#include <cstring>
-
+#define INF 987654321
 using namespace std;
-
-vector<int> v[101];
-bool check[101];
-
-void bfs(int x) {
-	queue<int> q;
-	memset(check,false,sizeof(check));
-	q.push(x);
-	while(!q.empty()) {
-		int y = q.front();
-		q.pop();
-		for(int i=0; i<v[y].size(); i++) {
-			int next = v[y][i];
-			if(check[next] == false) {
-				check[next] = true;
-				q.push(next);
-			}
-		}
-	}
+int dist[111][111];
+int main() {
+    int nv; scanf("%d",&nv);
+    for(int i=1; i<=nv; i++) {
+        for(int j=1; j<=nv; j++) {
+            scanf("%d",&dist[i][j]);
+            if(!dist[i][j]) dist[i][j] = INF;
+        }
+    }
+    for(int k=1; k<=nv; k++) 
+        for(int i=1; i<=nv; i++)
+            for(int j=1; j<=nv; j++)
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+    for(int i=1; i<=nv; i++) {
+        for(int j=1; j<=nv; j++)
+            printf("%d ",dist[i][j] == INF? 0:1);
+        puts("");
+    }
 }
 
-int main()
-{
-	int n,in;
-	scanf("%d",&n);
-
-	for(int i=0; i<n; i++) {
-		for(int j=0; j<n; j++) {
-			scanf("%d",&in);
-			if(in == 1) {
-				v[i].push_back(j);
-			}
-		}
-	}
-
-	for(int i=0; i<n; i++) {
-		bfs(i);
-
-		for(int j=0; j<n; j++) {
-			if(check[j])
-				printf("1 ");
-			else
-				printf("0 ");
-		}
-		puts("");
-	}
-
-}
