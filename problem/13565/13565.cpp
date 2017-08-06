@@ -2,19 +2,18 @@
 
 int a[1001][1001];
 bool check[1001][1001];
-int xx[] = {0,1,-1};
-int yy[] = {1,0,0};
+int xx[] = {-1, 0, 1, 0};
+int yy[] = {0, -1, 0, 1};
 int m,n;
 
 void dfs(int y, int x) {
     check[y][x] = 1;
-    for(int i=0; i<3; i++) {
-        int nx = x + xx[i];
+    for(int i=0; i<4; i++) {
         int ny = y + yy[i];
-        if(nx<1 || nx>n || ny<1 || ny>m || a[ny][nx] || check[ny][nx]) {
-            continue;
-        }
-        dfs(ny,nx);
+        int nx = x + xx[i];
+        if(1 <= ny && ny <= m && 1 <= nx && nx <= n)
+            if(!a[ny][nx] && !check[ny][nx])
+                dfs(ny,nx);
     }
 }
 
