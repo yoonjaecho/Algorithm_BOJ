@@ -1,61 +1,52 @@
 #include <cstdio>
+#include <cstring>
 #include <algorithm>
-#include <vector>
 #include <cmath>
-#define ll long long
 using namespace std;
-
-ll init(vector<ll> &a, vector<ll> &tree, int node, int start, int end) {
-    if(start == end)
-        return tree[node] = a[start];
-    else
-        return tree[node] = init(a, tree, node*2, start, (start+end)/2) + init(a, tree, node*2+1, (start+end)/2+1, end);
-}
-
-void update(vector<ll> &tree, int node, int start, int end, int index, ll diff) {
-    if(index < start || index > end) return;
-    tree[node] += diff;
-    if(start != end) {
-        update(tree, node*2, start, (start+end)/2, index, diff);
-        update(tree, node*2+1, (start+end)/2+1, end, index, diff);
+#define ll long long
+#define MAX_SIZE 1 << 21
+ll arr[MAX_SIZE];
+struct SegTree {
+    int size, start;
+    SegTree(int n) :size(n) {
+        start = 1;
+        while(start < size) start <<= 1;
     }
-}
-
-ll sum(vector<ll> &tree, int node, int start, int end, int left, int right) {
-    if(left > end || right < start)
-        return 0;
-    if(left <= start && end <= right)
-        return tree[node];
-    return sum(tree, node*2, start, (start+end)/2, left, right) + sum(tree, node*2+1, (start+end)/2+1, end, left, right);
-}
-
-int main()
-{
-    int n,m,k;
-    scanf("%d%d%d",&n,&m,&k);
-    vector<ll> a(n);
-    int h = (int)ceil(log2(n));
-    int tree_size = (1 << (h+1));
-    vector<ll> tree(tree_size);
-    m += k;
+    void build() {
+        for(int i=start-1; i>0; i--)
+            arr[i] = arr[i*2] + arr[i*2+1];
+    }
+    ll sum(int L, int R) { return sum(L, R, 1, 0, start-1); }
+    ll sum(int L, int R, int index, int NL, int NR) {
+        if(R < NL || NR < L) return 0;
+        if(L <= NL && NR <= R) return arr[index];            
+        int mid = (NL + NR) / 2;
+        return sum(L, R, index*2, NL, mid) + sum(L, R, index*2+1, mid+1, NR);
+    }
+    void update(int index, ll value) {
+        index += start;
+        arr[index] = value;
+        while(index > 1) {
+            index /= 2;
+            arr[index] = arr[index*2] + arr[index*2+1];
+        }
+    }
+};
+int main() {
+    int n, m, k; scanf("%d%d%d",&n,&m,&k);
+    SegTree ST(n);
     for(int i=0; i<n; i++)
-        scanf("%lld",&a[i]);
-    init(a, tree, 1, 0, n-1);
-    while(m--) {
-        int t1;
-        scanf("%d",&t1);
-        if(t1==1) {
-            int t2;
-            ll t3, diff;
-            scanf("%d %lld",&t2,&t3);
-            t2--;
-            diff = t3 - a[t2];
-            a[t2] = t3; 
-            update(tree, 1, 0, n-1, t2, diff);
-        } else if(t1==2) {
-            int w,e;
-            scanf("%d%d",&w,&e);
-            printf("%lld\n",sum(tree, 1, 0, n-1, w-1,e-1));
+        scanf("%lld", arr + ST.start + i);
+    ST.build();
+    for(int i=0; i<m+k; i++) {
+        int q; scanf("%d", &q);
+        if(q == 1) {
+            int b; ll c; scanf("%d%lld", &b, &c);
+            ST.update(b-1, c);
+        }
+        else {
+            int b, c; scanf("%d%d", &b, &c);
+            printf("%lld\n", ST.sum(b-1, c-1));
         }
     }
 }
