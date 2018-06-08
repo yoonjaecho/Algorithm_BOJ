@@ -1,32 +1,13 @@
 #include <cstdio>
-
-using namespace std;
-
-int numOfZero;
-int numOfOne;
-
-int fibo(int n) {
-	if(n==0) {
-		numOfZero++;
-		return 0;
-	} else if(n==1) {
-		numOfOne++;
-		return 1;
-	} else
-		return fibo(n-1) + fibo(n-2);
-}		
-
+int dp0[44] = {1, 0}, dp1[44] = {0, 1};
 int main() {
-
-	int test_case,in;
-
-	scanf("%d",&test_case);
-
-	while(test_case--) {
-		numOfZero = numOfOne = 0;
-		scanf("%d",&in);
-		fibo(in);
-		printf("%d %d\n",numOfZero,numOfOne);
-
+	int T; scanf("%d", &T);
+	for(int i=2; i<=40; i++) {
+		dp0[i] = dp0[i - 1] + dp0[i - 2];
+		dp1[i] = dp1[i - 1] + dp1[i - 2];
+	}
+	while(T--) {
+		int N; scanf("%d", &N);
+		printf("%d %d\n", dp0[N], dp1[N]);
 	}
 }
